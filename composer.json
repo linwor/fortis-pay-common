@@ -1,0 +1,21 @@
+{
+  "name": "linwor/fortis-pay-common",
+  "description": "Fortis Pay common classes for modules",
+  "type": "library",
+  "minimum-stability": "stable",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "App Inlet (Pty) Ltd",
+      "email": "info@appinlet.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Fortis\\Api\\": "src"
+    }
+  }
+}
