@@ -1,6 +1,6 @@
 <?php
 
-namespace Fortis\Api;
+namespace Fortis\FrameworkApi;
 
 use Exception;
 
