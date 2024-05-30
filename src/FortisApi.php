@@ -2,7 +2,7 @@
 
 namespace Fortis\Api;
 
-use Fortis\Api\FortisFrameworkApi;
+use Fortis\FrameworkApi\FortisFrameworkApi;
 class FortisApi
 {
 
