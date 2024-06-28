@@ -3,56 +3,57 @@
 namespace Fortis\Api;
 
 use Fortis\FrameworkApi\FortisFrameworkApi;
+
 class FortisApi
 {
 
-    public const FORTIS_URL_SANDBOX    = "https://api.sandbox.fortis.tech";
+    public const FORTIS_URL_SANDBOX = "https://api.sandbox.fortis.tech";
     public const FORTIS_URL_PRODUCTION = "https://api.fortis.tech";
     public const CONTENT_TYPE = 'Content-Type: application/json';
 
-    public  const WHITE        = '#ffffff';
-    public  const BLACK        = '#000000';
-    public  const COLOURBUTTON = '#0700ff';
-    public  const COLOURLINK   = '#0000ff';
+    public const WHITE = '#ffffff';
+    public const BLACK = '#000000';
+    public const COLOURBUTTON = '#0700ff';
+    public const COLOURLINK = '#0000ff';
 
-    public  const TEST_MODE                     = 'test_mode';
-    public  const VAULT                         = 'vault';
+    public const TEST_MODE = 'test_mode';
+    public const VAULT = 'vault';
 
-    public  const TOKENIZATION                  = 'Tokenization';
-    public  const ACH                           = 'ach';
-    public  const CC                            = 'cc';
-    public  const LEVEL3                        = 'level3';
-    public  const ENVIRONMENT                   = 'environment';
-    public  const PRODUCTION_HOST_DOMAIN        = 'production_host_domain';
-    public  const PRODUCTION_USER_ID            = 'production_user_id';
-    public  const PRODUCTION_USER_API_KEY       = 'production_user_api_key';
-    public  const PRODUCTION_PRODUCT_ID_CC      = 'production_product_id_cc';
-    public  const PRODUCTION_PRODUCT_ID_ACH     = 'production_product_id_ach';
-    public  const PRODUCTION_LOCATION_ID        = 'production_location_id';
-    public  const SANDBOX_HOST_DOMAIN           = 'sandbox_host_domain';
-    public  const SANDBOX_USER_ID               = 'sandbox_user_id';
-    public  const SANDBOX_USER_API_KEY          = 'sandbox_user_api_key';
-    public  const SANDBOX_PRODUCT_ID_CC         = 'sandbox_product_id_cc';
-    public  const SANDBOX_PRODUCT_ID_ACH        = 'sandbox_product_id_ach';
-    public  const SANDBOX_LOCATION_ID           = 'sandbox_location_id';
-    public  const TRANSACTION_TYPE              = 'transaction_type';
-    public  const ACTION                        = 'action';
-    public  const THEME                         = 'theme';
-    public  const FLOATINGLABELS                = 'floatingLabels';
-    public  const SHOWVALIDATIONANIMATION       = 'showValidationAnimation';
-    public  const COLORBUTTONSELECTEDTEXT       = 'colorButtonSelectedText';
-    public  const COLORBUTTONSELECTEDBACKGROUND = 'colorButtonSelectedBackground';
-    public  const COLORBUTTONACTIONBACKGROUND   = 'colorButtonActionBackground';
-    public  const COLORBUTTONACTIONTEXT         = 'colorButtonActionText';
-    public  const COLORBUTTONBACKGROUND         = 'colorButtonBackground';
-    public  const COLORBUTTONTEXT               = 'colorButtonText';
-    public  const COLORFIELDBACKGROUND          = 'colorFieldBackground';
-    public  const COLORFIELDBORDER              = 'colorFieldBorder';
-    public  const COLORTEXT                     = 'colorText';
-    public  const COLORLINK                     = 'colorLink';
-    public  const FONTSIZE                      = 'fontSize';
-    public  const MARGINSPACING                 = 'marginSpacing';
-    public  const BORDERRADIUS                  = 'borderRadius';
+    public const TOKENIZATION = 'Tokenization';
+    public const ACH = 'ach';
+    public const CC = 'cc';
+    public const LEVEL3 = 'level3';
+    public const ENVIRONMENT = 'environment';
+    public const PRODUCTION_HOST_DOMAIN = 'production_host_domain';
+    public const PRODUCTION_USER_ID = 'production_user_id';
+    public const PRODUCTION_USER_API_KEY = 'production_user_api_key';
+    public const PRODUCTION_PRODUCT_ID_CC = 'production_product_id_cc';
+    public const PRODUCTION_PRODUCT_ID_ACH = 'production_product_id_ach';
+    public const PRODUCTION_LOCATION_ID = 'production_location_id';
+    public const SANDBOX_HOST_DOMAIN = 'sandbox_host_domain';
+    public const SANDBOX_USER_ID = 'sandbox_user_id';
+    public const SANDBOX_USER_API_KEY = 'sandbox_user_api_key';
+    public const SANDBOX_PRODUCT_ID_CC = 'sandbox_product_id_cc';
+    public const SANDBOX_PRODUCT_ID_ACH = 'sandbox_product_id_ach';
+    public const SANDBOX_LOCATION_ID = 'sandbox_location_id';
+    public const TRANSACTION_TYPE = 'transaction_type';
+    public const ACTION = 'action';
+    public const THEME = 'theme';
+    public const FLOATINGLABELS = 'floatingLabels';
+    public const SHOWVALIDATIONANIMATION = 'showValidationAnimation';
+    public const COLORBUTTONSELECTEDTEXT = 'colorButtonSelectedText';
+    public const COLORBUTTONSELECTEDBACKGROUND = 'colorButtonSelectedBackground';
+    public const COLORBUTTONACTIONBACKGROUND = 'colorButtonActionBackground';
+    public const COLORBUTTONACTIONTEXT = 'colorButtonActionText';
+    public const COLORBUTTONBACKGROUND = 'colorButtonBackground';
+    public const COLORBUTTONTEXT = 'colorButtonText';
+    public const COLORFIELDBACKGROUND = 'colorFieldBackground';
+    public const COLORFIELDBORDER = 'colorFieldBorder';
+    public const COLORTEXT = 'colorText';
+    public const COLORLINK = 'colorLink';
+    public const FONTSIZE = 'fontSize';
+    public const MARGINSPACING = 'marginSpacing';
+    public const BORDERRADIUS = 'borderRadius';
 
     public $user_id;
     public $user_api_key;
@@ -79,12 +80,12 @@ class FortisApi
             $this->user_api_key = $this->framework->getUserApiKey();
             $this->location_id  = $this->framework->getLocationId();
             if ($this->framework->getACHEnabled()) {
-                $this->product_id_ach   = $this->framework->getProductIdACH();
+                $this->product_id_ach = $this->framework->getProductIdACH();
             }
             if ($this->framework->getCCEnabled()) {
-                $this->product_id_cc   = $this->framework->getProductIdCC();
+                $this->product_id_cc = $this->framework->getProductIdCC();
             }
-            $this->action       = $this->framework->getAction();
+            $this->action = $this->framework->getAction();
         }
 
         if ($this->framework->getEnvironment() === 'production') {
@@ -98,78 +99,84 @@ class FortisApi
 
     /**
      * add level 3 data to transaction
+     *
+     * @param array $lineItems
+     *
+     * @return string
      */
-    public function addLevel3($lineItems): string
+    public function addLevel3(array $lineItems): string
     {
-        $account_type = $this->transaction->account_type;
-        $transaction_type  = $this->getTransactionType($this->transaction);
-        $transaction = $this->transaction;
-        $transactionId = $this->transaction->id;
+        $account_type     = $this->transaction->account_type;
+        $transactionId    = $this->transaction->id;
 
-        $intentData = [];
-        $intentData['level3_data'] = [];
+        $intentData                              = [];
+        $intentData['level3_data']               = [];
         $intentData['level3_data']['line_items'] = [];
 
         $result = '';
 
-        if ($account_type == 'visa') {
+        if ($account_type === 'visa') {
             $intentData['level3_data']['tax_amount'] = $this->transaction->tax;
 
             foreach ($lineItems as $lineItem) {
-                array_push(
-                    $intentData['level3_data']['line_items'],
-                    [
-                        "description"                 => (string) $lineItem['description'],
-                        "commodity_code"              => (string) $lineItem['commodity_code'],
-                        "product_code"                => (string) $lineItem['product_code'],
-                        "unit_code"                   => (string) $lineItem['unit_code'],
-                        "unit_cost"                   => (int) $lineItem['unit_cost'],
-                    ]
-                );
+                $item = [
+                    "description"    => (string)$lineItem['description'],
+                    "commodity_code" => (string)$lineItem['commodity_code'],
+                    "product_code"   => (string)$lineItem['product_code'],
+                    "unit_code"      => (string)$lineItem['unit_code'],
+                    "unit_cost"      => (int)$lineItem['unit_cost'],
+                    "quantity"       => 1,
+                ];
+                if (isset($lineItem['quantity'])) {
+                    $item['quantity'] = $lineItem['quantity'];
+                }
+                $intentData['level3_data']['line_items'][] = $item;
             }
 
-            $result =  $this->post($intentData, '/v1/transactions/' . $transactionId . '/level3/visa');
-        }
-
-        if ($account_type == 'mc') {
+            $result = $this->post($intentData, '/v1/transactions/' . $transactionId . '/level3/visa');
+        } elseif ($account_type === 'mc') {
             $intentData['level3_data']['tax_amount'] = $this->transaction->tax;
             foreach ($lineItems as $lineItem) {
-                array_push(
-                    $intentData['level3_data']['line_items'],
-                    [
-                        "description"                 => (string) $lineItem['description'],
-                        "product_code"                => (string) $lineItem['product_code'],
-                        "unit_code"                   => (string) $lineItem['unit_code'],
-                        "unit_cost"                   => (int) $lineItem['unit_cost'],
-                    ]
-                );
-                $result =  $this->post($intentData, '/v1/transactions/' . $transactionId . '/level3/master-card');
+                $item = [
+                    "description"  => (string)$lineItem['description'],
+                    "product_code" => (string)$lineItem['product_code'],
+                    "unit_code"    => (string)$lineItem['unit_code'],
+                    "unit_cost"    => (int)$lineItem['unit_cost'],
+                    'quantity'     => 1,
+                ];
+                if (isset($lineItem['quantity'])) {
+                    $item['quantity'] = $lineItem['quantity'];
+                }
+                $intentData['level3_data']['line_items'][] = $item;
+
+                $result = $this->post($intentData, '/v1/transactions/' . $transactionId . '/level3/master-card');
             }
         }
+
         return $result;
     }
 
-	/**
-	 *
-	 *
-	 * @param $total
-	 * @param $tax_amount
-	 * @param $saveAccount
-	 *
-	 * @return string
-	 */
+    /**
+     *
+     *
+     * @param $total
+     * @param $tax_amount
+     * @param $saveAccount
+     *
+     * @return string
+     */
     public function getClientToken($total, $tax_amount, $saveAccount): string
     {
         $intentData = [
             'action'       => $this->action,
-            'amount'       => (int) $total,
+            'amount'       => (int)$total,
             'location_id'  => $this->location_id,
             'save_account' => $saveAccount,
 
         ];
 
         if ($tax_amount > 0) {
-            $intentData['tax_amount'] = (int) $tax_amount;
+            $intentData['tax_amount'] = (int)$tax_amount;
         }
         $intentData['methods'] = [];
 
@@ -195,7 +202,7 @@ class FortisApi
 
         $response = json_decode($this->post($intentData, "/v1/elements/transaction/intention"));
 
-        if (!isset($response->data->client_token)) {
+        if ( ! isset($response->data->client_token)) {
             return '';
         } else {
             return $response->data->client_token;
@@ -203,14 +210,14 @@ class FortisApi
     }
 
     /**
-     * 
+     *
      *
      * @return string
      */
     public function getPaymentMethodToken(): string
     {
         $intentData = [
-            'action' => 'tokenization',
+            'action'      => 'tokenization',
             'location_id' => $this->location_id,
 
         ];
@@ -235,7 +242,6 @@ class FortisApi
                 ]
             );
         }
-
 
 
         $response = json_decode($this->post($intentData, "/v1/elements/transaction/intention"));
@@ -265,15 +271,14 @@ class FortisApi
      */
     public function processTransaction($post, $transaction_amount, $customer_id)
     {
-
-        $this->result      = json_decode(stripslashes($post['result']));
-        $this->transaction = isset($this->result->data) ? $this->result->data : null;
-        $saved_account     = isset($this->transaction->saved_account) ? $this->transaction->saved_account : null;
-        $useSavedAccount   = isset($post['useSavedAccount']) ? $post['useSavedAccount'] == 'on' : false;
-        $saveAccount       = isset($post['SaveAccount']) ? $post['SaveAccount'] == 'on' : false;
-        $token_id          = isset($saved_account->id) ? $saved_account->id : null;
+        $this->result          = json_decode(stripslashes($post['result']));
+        $this->transaction     = isset($this->result->data) ? $this->result->data : null;
+        $saved_account         = isset($this->transaction->saved_account) ? $this->transaction->saved_account : null;
+        $useSavedAccount       = isset($post['useSavedAccount']) ? $post['useSavedAccount'] == 'on' : false;
+        $saveAccount           = isset($post['SaveAccount']) ? $post['SaveAccount'] == 'on' : false;
+        $token_id              = isset($saved_account->id) ? $saved_account->id : null;
         $this->transactionType = $this->getTransactionType($this->transaction);
-        $this->paymentMethod = $this->transaction->payment_method;
+        $this->paymentMethod   = $this->transaction->payment_method;
         if ($useSavedAccount && isset($post['CC'])) {
             $token_id = $post['CC'];
         }
@@ -327,7 +332,6 @@ class FortisApi
      */
     public function doTokenisedTransaction($transaction_amount, $token_id): string
     {
-
         $token = $this->framework->getTokenById($token_id);
 
         $intentData = [
@@ -337,7 +341,7 @@ class FortisApi
 
         if ($this->action == 'sale') {
             $transactionResult = $this->post($intentData, "/v1/transactions/cc/sale/token");
-        } else if ($this->action == 'ach') {
+        } elseif ($this->action == 'ach') {
             $transactionResult = $this->post($intentData, "/v1/transactions/ach/debit/token");
         } else { //auth-only
             $transactionResult = $this->post($intentData, "/v1/transactions/cc/auth-only/token");
@@ -378,19 +382,18 @@ class FortisApi
 
     public function createAchPostback($url, $transaction_id)
     {
-
         $intentData = [
-            'is_active' => 'true',
-            "on_create" => 'true',
-            "on_update" => 'true',
-            "on_delete" => 'true',
-            'location_id'  => $this->location_id,
-            "product_transaction_id" => (string) $this->transaction->product_transaction_id,
-            "url" => (string) $url,
-            "number_of_attempts" => 1,
+            'is_active'              => 'true',
+            "on_create"              => 'true',
+            "on_update"              => 'true',
+            "on_delete"              => 'true',
+            'location_id'            => $this->location_id,
+            "product_transaction_id" => (string)$this->transaction->product_transaction_id,
+            "url"                    => (string)$url,
+            "number_of_attempts"     => 1,
         ];
 
-        $result      = $this->createTransactionPostback($intentData);
+        $result = $this->createTransactionPostback($intentData);
     }
 
     public function createTransactionPostback(array $intentData)
@@ -514,7 +517,7 @@ class FortisApi
         $intentCreated = false;
         $curlError     = null;
         $response      = null;
-        while (!$intentCreated && $cnt < 5) {
+        while ( ! $intentCreated && $cnt < 5) {
             $response     = curl_exec($curl);
             $responseCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
             if ($responseCode !== 200) {
@@ -524,7 +527,7 @@ class FortisApi
             $intentCreated = true;
         }
 
-        if (!$intentCreated) {
+        if ( ! $intentCreated) {
             FortisFrameworkApi::logError('FortisApi->callAPI', $curlError);
 
             // Do something with this error
