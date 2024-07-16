@@ -106,8 +106,8 @@ class FortisApi
      */
     public function addLevel3(array $lineItems): string
     {
-        $account_type     = $this->transaction->account_type;
-        $transactionId    = $this->transaction->id;
+        $account_type  = $this->transaction->account_type;
+        $transactionId = $this->transaction->id;
 
         $intentData                              = [];
         $intentData['level3_data']               = [];
@@ -163,9 +163,9 @@ class FortisApi
      * @param $tax_amount
      * @param $saveAccount
      *
-     * @return string
+     * @return mixed
      */
-    public function getClientToken($total, $tax_amount, $saveAccount): string
+    public function getClientToken($total, $tax_amount, $saveAccount): mixed
     {
         $intentData = [
             'action'       => $this->action,
@@ -175,35 +175,44 @@ class FortisApi
 
         ];
 
+        if ($this->framework->retainedAmountEnabled()) {
+            if ($this->framework->useFixedRetainedAmount()) {
+                $retainedAmount = (int)(100 * $this->framework->getRetainedAmountValue());
+            } else {
+                $retainedAmount = (int)($total * $this->framework->getRetainedAmountValue() / 100);
+            }
+
+            $intentData['secondary_amount'] = min($retainedAmount, $total);
+        }
+
         if ($tax_amount > 0) {
             $intentData['tax_amount'] = (int)$tax_amount;
         }
         $intentData['methods'] = [];
 
         if ($this->product_id_cc) {
-            array_push(
-                $intentData['methods'],
-                [
-                    "type"                   => "cc",
-                    "product_transaction_id" => $this->product_id_cc
-                ]
-            );
+            $intentData['methods'][] = [
+                "type"                   => "cc",
+                "product_transaction_id" => $this->product_id_cc
+            ];
         }
         if (isset($this->product_id_ach)) {
-            array_push(
-                $intentData['methods'],
-                [
-                    "type"                   => "ach",
-                    "product_transaction_id" => $this->product_id_ach
-                ]
-            );
+            $intentData['methods'][] = [
+                "type"                   => "ach",
+                "product_transaction_id" => $this->product_id_ach
+            ];
         }
 
+        $t = json_encode($intentData);
 
         $response = json_decode($this->post($intentData, "/v1/elements/transaction/intention"));
 
         if ( ! isset($response->data->client_token)) {
-            return '';
+            if (isset($response?->type) && $response->type === 'Error') {
+                return ['error' => $response?->detail];
+            } else {
+                return ['error' => 'An unknown error occurred'];
+            }
         } else {
             return $response->data->client_token;
         }
@@ -225,22 +234,16 @@ class FortisApi
         $intentData['methods'] = [];
 
         if ($this->product_id_cc) {
-            array_push(
-                $intentData['methods'],
-                [
-                    "type"                   => "cc",
-                    "product_transaction_id" => $this->product_id_cc
-                ]
-            );
+            $intentData['methods'][] = [
+                "type"                   => "cc",
+                "product_transaction_id" => $this->product_id_cc
+            ];
         }
         if (isset($this->product_id_ach)) {
-            array_push(
-                $intentData['methods'],
-                [
-                    "type"                   => "ach",
-                    "product_transaction_id" => $this->product_id_ach
-                ]
-            );
+            $intentData['methods'][] = [
+                "type"                   => "ach",
+                "product_transaction_id" => $this->product_id_ach
+            ];
         }
 
 
@@ -330,14 +333,34 @@ class FortisApi
      *
      * @return string
      */
-    public function doTokenisedTransaction($transaction_amount, $token_id): string
+    public function doTokenisedTransaction($transaction_amount, $token_id, $order_id, $tax_amount = 0): string
     {
-        $token = $this->framework->getTokenById($token_id);
+        $token                = $this->framework->getTokenById($token_id);
+        $productTransactionId = $this->framework->getProductIdCC();
+        if ( ! in_array($token[0]['type'], ['cc', 'visa'])) {
+            $productTransactionId = $this->framework->getProductIdACH();
+            $this->action         = 'ach';
+        }
+
 
         $intentData = [
-            'transaction_amount' => $transaction_amount,
-            'token_id'           => $token,
+            'transaction_amount'     => $transaction_amount,
+            'token_id'               => $token[0]['token'],
+            'product_transaction_id' => $productTransactionId,
+            'tax'                    => $tax_amount,
+            'description'            => (string)$order_id,
         ];
+
+        if ($this->framework->retainedAmountEnabled()) {
+            if ($this->framework->useFixedRetainedAmount()) {
+                $retainedAmount = (int)(100 * $this->framework->getRetainedAmountValue());
+            } else {
+                $retainedAmount = (int)($transaction_amount * $this->framework->getRetainedAmountValue() / 100);
+            }
+
+            $intentData['secondary_amount'] = min($retainedAmount, $retainedAmount);
+        }
+
 
         if ($this->action == 'sale') {
             $transactionResult = $this->post($intentData, "/v1/transactions/cc/sale/token");
